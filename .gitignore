@@ -1,0 +1,13 @@
+#My stuff treasure never be share myboy
+.env
+#python cache since they are created whenever you run the program!!
+__pycache__/
+#all Python compile files which are created when python compile or exacute the codes
+*.pyc
+#Logs Black box in an Air plane tracking each and everything going on
+logs/
+#virtual environment
+venv/
+#os
+.DS_Store
+
