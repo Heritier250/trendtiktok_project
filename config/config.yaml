@@ -1,0 +1,59 @@
+py#
+#PROJECT NAME : TIKTOK TREND IN EAC
+#CONFIGURATION STATUS :PIPELINE CONFIGURATION
+#BUSINESS OWEN :NELLY HERITIER
+#LAST UPDATED :2026-08-06
+#=======================================
+#This particual configuration will be controling the operation of this pipeline 
+#You may wonder what is the important of this configuration well : f any change required instead of change codes and redeploy we 
+#change configuration
+#=====================
+#PIPELINE IDENTITY
+# =====================
+pipeline:
+  name: 'Tiktok trends -East Africa Community'
+  version: '1.0.0'
+  environment: 'development' #this its actaually show that its currently running on local computer dcpm=local computer, production=server
+#=======================================
+#schedule( when should i run my pipeline)
+#=======================================
+schedule:
+  run_frequency_hours: 6
+  timezone: "Africa/Nairobi"
+#extract rules (How do i get data)
+extraction:
+  videos_per_country: 50
+  max_age_days: 10
+  request_delay_seconds: 2
+  max_retries: 3
+#==============================================================================================================
+#Quality threadshold(what is good enough , actually it tells what the condition should we for during alloctions)
+#==============================================================================================================
+quality:
+#may logic i wanted to you to check and explorer alot of stuff
+  logic: "OR"
+#Video threadsholds(any one can trigger 'keep' because of "OR" LOGIC
+  min_views_threshold: 3000
+  min_likes_threshold: 200
+  min_comments_threshold: 40
+  min_shares_threshlod: 10
+#Trend threshold
+  min_videos_for_trend: 10
+  min_creators_for_trend: 5
+#creator_threshold
+  min_followers_thredshold: 500
+  min_engagement_rate: 0.02
+#features flage
+features:
+  enable_trend_detection: true
+  enable_creator_tracking: true
+  enable_audio_analysis: true
+  enable_email_alerts: false #Future feature 
+#Alerts (who is supposed to get notified in case something goes wrong!! everyone? no data engineers!!
+alerts:
+  on_failure: true
+  on_success: false
+  email: "heritiermanizabayo250@gmail.com" #feature for future 
+
+
+

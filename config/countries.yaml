@@ -1,0 +1,62 @@
+---
+# ============================================
+# EAST AFRICA COMMUNITY - TIKTOK MARKETS
+# Business Owner: NELLY HERITIER
+# Last Updated: 2026-06-08
+# ============================================
+# We only keep 10 days of data (max_age_days: 10)
+# "since" = when we STARTED tracking (for history)
+# ============================================
+
+countries:
+  - code: KE
+    name: Kenya
+    is_active: true
+    priority: 3
+    since: 2026-06-01      # Started tracking June 1, 2026
+    
+  - code: TZ
+    name: Tanzania
+    is_active: true
+    priority: 2
+    since: 2026-06-01      # Started tracking June 1, 2026
+    
+  - code: UG
+    name: Uganda
+    is_active: true
+    priority: 2
+    since: 2026-06-01      # Started tracking June 1, 2026
+    
+  - code: RW
+    name: Rwanda
+    is_active: true
+    priority: 1
+    since: 2026-06-08      # Started tracking today
+    
+  - code: BI
+    name: Burundi
+    is_active: true
+    priority: 4
+    since: 2026-06-08      # Started tracking today
+    
+  - code: SS
+    name: South Sudan
+    is_active: true
+    priority: 4
+    since: 2026-06-08      # Started tracking today
+    
+  - code: CD
+    name: Congo DR
+    is_active: true
+    priority: 4
+    since: 2026-06-08      # Started tracking today
+
+# ============================================
+# FUTURE EXPANSION
+# ============================================
+# - code: ET
+#   name: Ethiopia
+#   is_active: false
+#   priority: 5
+#   planned_date: 2026-09-01
+#   notes: "Wait for Q3 2026"
