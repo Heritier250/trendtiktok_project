@@ -94,10 +94,10 @@ class Agechecker:
         
         self.path_builder=path_builder
         
-    def get_age_fle_hours(self, filepath:Path):
+    def get_age_file_hours(self, filepath:Path):
         
         if not filepath.exists():
-            return float('inf')
+            return  float ('inf')
         #getting the last modifacation time of file 
         mtime=filepath.stat().st_mtime
         #getting the age in form datedelta 
@@ -107,7 +107,7 @@ class Agechecker:
         return age.total_seconds()/ 3600
     
     def is_flesh(self, filepath:Path, max_hours:int=6):
-        return self.get_age_fle_hours(filepath) < max_hours
+        return self.get_age_file_hours(filepath) < max_hours
     
     def latest_raw(self, country_code:str)-> Optional[Path]:
         
@@ -129,5 +129,5 @@ class Agechecker:
         
         if not latest:
             return None
-        return self.get_age_fle_hours(latest)
+        return self.get_age_file_hours(latest)
 
