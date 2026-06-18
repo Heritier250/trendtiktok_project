@@ -29,7 +29,7 @@ extraction:
 #Quality threadshold(what is good enough , actually it tells what the condition should we for during alloctions)
 #==============================================================================================================
 quality:
-#may logic i wanted to you to check and explorer alot of stuff
+#Or logic is the one that take in account in everything 
   logic: "OR"
 #Video threadsholds(any one can trigger 'keep' because of "OR" LOGIC
   min_views_threshold: 3000
