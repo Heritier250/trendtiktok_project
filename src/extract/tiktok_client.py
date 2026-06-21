@@ -195,22 +195,32 @@ class Tiktok(BaseExtractor):
 
     def _extract_hidden_json(self, html_content: str) -> Optional[Dict]:
         """Extract TikTok's hidden JSON."""
-        pattern = r'<script id="__UNIVERSAL_DATA_FOR_REHYDRATION__"[^>]*>(.*?)</script>'
-        match = re.search(pattern, html_content, re.DOTALL)
+        patterns = [
+        r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>',
+        r'<script id="__STATE__"[^>]*>(.*?)</script>',
+        r'<script[^>]*video[^>]*>(.*?)</script>',
+        r'<script[^>]*itemStruct[^>]*>(.*?)</script>']
         
-        if not match:
-            self.logger.warning("Could not find hidden JSON")
-            return None
-        
-        try:
-            return json.loads(match.group(1))
-        except json.JSONDecodeError as e:
-            self.logger.error(f"Failed to parse JSON: {e}")
-            return None
+    
+    
+        for pattern in patterns:
+            match = re.search(pattern, html_content, re.DOTALL)
+            if match:
+                try:
+                    data = json.loads(match.group(1))
+                    # Check if it has video data
+                    if 'itemStruct' in str(data) or 'video' in str(data):
+                        self.logger.info(f"Found video data using pattern: {pattern[:50]}...")
+                        return data
+                except:
+                    continue
+    
+        self.logger.warning("Could not find video data in any script")
+        return None
 
 
 # ============================================
-# MAIN ENTRY POINT : Testing the stuff
+# MAIN ENTRY POINT : Testing stuff
 # ============================================
 
 def main():
