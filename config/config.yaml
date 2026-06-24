@@ -25,6 +25,7 @@ extraction:
   max_age_days: 10
   request_delay_seconds: 2
   max_retries: 3
+  url_strategy: "hashtag"
 #==============================================================================================================
 #Quality threadshold(what is good enough , actually it tells what the condition should we for during alloctions)
 #==============================================================================================================
