@@ -11,20 +11,20 @@
 countries:
   - code: KE
     name: Kenya
-    is_active: false
+    is_active: true
     priority: 3
     since: 2026-06-01      # Started tracking June 1, 2026
     hashtag: "kenya"
     
   - code: TZ
     name: Tanzania
-    is_active: false
+    is_active: true
     priority: 2
     since: 2026-06-01      # Started tracking June 1, 2026
     hashtag: "tanzania"
   - code: UG
     name: Uganda
-    is_active: false
+    is_active: true
     priority: 2
     since: 2026-06-01      # Started tracking June 1, 2026
     hashtag: "uganda"
@@ -36,13 +36,13 @@ countries:
     hashtag: "rwanda"
   - code: BI
     name: Burundi
-    is_active: false
+    is_active: true
     priority: 4
     since: 2026-06-08      # Started tracking today
     hashtag: "burundi"
   - code: SS
     name: South Sudan
-    is_active: false
+    is_active: true
     priority: 4
     since: 2026-06-08      # Started tracking today
     hashtag: "south sudan"
