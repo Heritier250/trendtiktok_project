@@ -118,103 +118,125 @@ class Tiktok(BaseExtractor):
     def get_source_type(self) -> str:
         return "tiktok"
     
+    def _get_hashtag(self, country_code: str) -> str:
+        countries = load_countries()
+        for country in countries:
+            if country['code'] == country_code:
+                hashtag = country.get('hashtag')
+                if hashtag:
+                    return hashtag
+                return country.get('name', country_code).lower()
+        return country_code.lower()
+    
     def _extract_from_source(self, country_code: str) -> Optional[Dict]:
         """Extract data from TikTok using Playwright + Stealth."""
-        max_retries=self.config['extraction'].get('max_retries', 3)
-        base_delay=self.config['extraction'].get('request_delay_seconds', 2)
-        for Attempt in range(1, max_retries +1):
+        hashtags = self._get_hashtag(country_code)
+        
+        max_retries = self.config['extraction'].get('max_retries', 3)
+        base_delay = self.config['extraction'].get('request_delay_seconds', 2)
+        
+        for Attempt in range(1, max_retries + 1):
             try:
-                self.logger.info(f"Attemps {Attempt}/{max_retries} for {country_code}")
-                url = f"https://www.tiktok.com/trending?country={country_code}"
+                self.logger.info(f"Attempts {Attempt}/{max_retries} for {country_code}")
+                
+                url = f"https://www.tiktok.com/tag/{hashtags}"
                 self.logger.info(f"Extracting from: {url}")
                 
-                
                 with Stealth().use_sync(sync_playwright()) as p:
-                        browser = p.chromium.launch(
-                            headless=False,
-                            slow_mo=800,
-                            args=[
-                                "--no-sandbox",
-                                "--disable-blink-features=AutomationControlled",
-                                "--disable-dev-shm-usage",
-                                "--disable-infobars",
-                                "--start-maximized",
-                                "--disable-features=IsolatedOrigins,site-per-process"
-                            ]
-                        )
-                        
-                        context = browser.new_context(
-                            viewport={"width": 1366, "height": 768},
-                            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-                            locale="en-US",
-                            timezone_id="Africa/Nairobi"
-                        )
-                        
-                        context.add_init_script("""
-                            Object.defineProperty(navigator, 'webdriver', {get: () => undefined});
-                            Object.defineProperty(navigator, 'plugins', {get: () => [1,2,3,4,5]});
-                            Object.defineProperty(navigator, 'language', {get: () => ['en-US', 'en']});
-                        """)
-                        
-                        page = context.new_page()
-                        
-                        # Stealth is ALREADY applied by Stealth().use_sync()
-                        
-                        self.logger.info(f"Navigating to {url}")
-                        page.goto(url, wait_until="networkidle", timeout=60000)
-                        
-                        time.sleep(random.uniform(2, 5))
-                        
-                        for _ in range(3):
-                            page.evaluate("window.scrollBy(0, 1200)")
-                            time.sleep(random.uniform(1, 3))
-                        
-                        html_content = page.content()
-                        data = self._extract_hidden_json(html_content)
-                        
-                        browser.close()
-                        
-                        if data:
-                            self.logger.info(f"Well Extracted data for {country_code}")
-                            return data
-                        else:
-                            self.logger.warning(f"Ohhh No data for {country_code}")
-                                
-                            
-            except Exception as e:
-                    self.logger.error(f"Error extracting {country_code}: {e}")
-                    if Attempt < max_retries:
-                        wait_time=base_delay * (2 ** (Attempt -1))
-                        self.logger.info(f"Waiting time {wait_time} seconds before we rty")
-                        time.sleep(wait_time)
+                    browser = p.chromium.launch(
+                        headless=False,
+                        slow_mo=800,
+                        args=[
+                            "--no-sandbox",
+                            "--disable-blink-features=AutomationControlled",
+                            "--disable-dev-shm-usage",
+                            "--disable-infobars",
+                            "--start-maximized",
+                            "--disable-features=IsolatedOrigins,site-per-process"
+                        ]
+                    )
+                    
+                    context = browser.new_context(
+                        viewport={"width": 1366, "height": 768},
+                        user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+                        locale="en-US",
+                        timezone_id="Africa/Nairobi"
+                    )
+                    
+                    context.add_init_script("""
+                        Object.defineProperty(navigator, 'webdriver', {get: () => undefined});
+                        Object.defineProperty(navigator, 'plugins', {get: () => [1,2,3,4,5]});
+                        Object.defineProperty(navigator, 'language', {get: () => ['en-US', 'en']});
+                    """)
+                    
+                    page = context.new_page()
+                    
+                    self.logger.info("Waiting like a human...")
+                    time.sleep(random.uniform(3, 6))
+                    
+                    self.logger.info(f"Navigating to {url}")
+                    page.goto(url, wait_until="networkidle", timeout=60000)
+                    
+                    time.sleep(random.uniform(5, 8))
+                    
+                    for _ in range(5):
+                        page.evaluate("window.scrollBy(0, 800)")
+                        time.sleep(random.uniform(2, 4))
+                    
+                    html_content = page.content()
+                    data = self._extract_hidden_json(html_content)
+                    
+                    browser.close()
+                    
+                    if data:
+                        self.logger.info(f"Well Extracted data for {country_code}")
+                        return data
                     else:
-                        self.logger.info(f"all {Attempt} attempts has failed for {country_code}")    
-                            
-        return None
+                        self.logger.warning(f"Ohhh No data for {country_code}")
+                        
+            except Exception as e:
+                self.logger.error(f"Error extracting {country_code}: {e}")
+                if Attempt < max_retries:
+                    wait_time = base_delay * (2 ** (Attempt - 1))
+                    self.logger.info(f"Waiting time {wait_time} seconds before we retry")
+                    time.sleep(wait_time)
+                else:
+                    self.logger.info(f"All {Attempt} attempts have failed for {country_code}")
         
-
+        return None
+    
     def _extract_hidden_json(self, html_content: str) -> Optional[Dict]:
         """Extract TikTok's hidden JSON."""
         patterns = [
-        r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>',
-        r'<script id="__STATE__"[^>]*>(.*?)</script>',
-        r'<script[^>]*video[^>]*>(.*?)</script>',
-        r'<script[^>]*itemStruct[^>]*>(.*?)</script>']
+            r'<script id="__UNIVERSAL_DATA_FOR_REHYDRATION__"[^>]*>(.*?)</script>',
+            r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>',
+            r'<script id="__STATE__"[^>]*>(.*?)</script>',
+            r'<script[^>]*type="application/json"[^>]*>(.*?)</script>',
+            r'<script[^>]*data-script="[^"]*"[^>]*>(.*?)</script>',
+            r'{"itemStruct".*?}',
+            r'{"video".*?}'
+        ]
         
-    
-    
         for pattern in patterns:
-            match = re.search(pattern, html_content, re.DOTALL)
-            if match:
-                try:
-                    data = json.loads(match.group(1))
-                    # Check if it has video data
-                    if 'itemStruct' in str(data) or 'video' in str(data):
-                        self.logger.info(f"Found video data using pattern: {pattern[:50]}...")
-                        return data
-                except:
-                    continue
-    
+            try:
+                match = re.search(pattern, html_content, re.DOTALL)
+                if match:
+                    json_text = match.group(1).strip()
+                    json_text = re.sub(r'^/\*.*?\*/', '', json_text, flags=re.DOTALL)
+                    json_text = re.sub(r'^<!\[CDATA\[', '', json_text)
+                    json_text = re.sub(r'\]\]>$', '', json_text)
+                    
+                    try:
+                        data = json.loads(json_text)
+                        data_str = json.dumps(data)
+                        if 'itemStruct' in data_str or 'video' in data_str or 'aweme' in data_str:
+                            self.logger.info(f"Found video data!")
+                            return data
+                    except json.JSONDecodeError:
+                        continue
+            except Exception as e:
+                continue
+        
         self.logger.warning("Could not find video data in any script")
         return None
 
