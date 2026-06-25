@@ -48,7 +48,7 @@ countries:
     hashtag: "south sudan"
   - code: CD
     name: Congo DR
-    is_active: false
+    is_active: true
     priority: 4
     since: 2026-06-08      # Started tracking today
     hashtag: "congo dr"
