@@ -15,7 +15,7 @@ countries:
     priority: 3
     since: 2026-06-01      # Started tracking June 1, 2026
     hashtag: "kenya"
-    
+
   - code: TZ
     name: Tanzania
     is_active: true
@@ -26,7 +26,7 @@ countries:
     name: Uganda
     is_active: true
     priority: 2
-    since: 2026-06-01      # Started tracking June 1, 2026
+    since: 2026-06-01      # Started tr Aha! This is the Smoking Gun!acking June 1, 2026
     hashtag: "uganda"
   - code: RW
     name: Rwanda
