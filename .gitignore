@@ -10,4 +10,8 @@ logs/
 venv/
 #os
 .DS_Store
+encryption.key
+file_config.yaml
+file_config_decrypted.yaml
+
 
