@@ -6,6 +6,7 @@ from typing import Dict, Any, List, Optional
 config_path=Path('config/config.yaml')
 #Business configuration (Countries)
 countries_path=Path('config/countries.yaml')
+file_config_path=Path('config/file_config.yaml')
 
 
 def config_loader() -> Dict[str, Any]:
@@ -15,7 +16,7 @@ def config_loader() -> Dict[str, Any]:
                 return yaml.safe_load(f)
         else:
             raise FileNotFoundError(f"{config_path} does not exists please")  
-    except FileNotFoundError as e:
+    except Exception as e:
             print(f"Error", e)
             return {}
         
@@ -27,9 +28,20 @@ def load_countries()->List[Dict[str, Any]]:
                 return data.get('countries', [])        
         else:
             raise FileNotFoundError(f"{countries_path} fole does not exist")  
-    except FileNotFoundError as e:
+    except Exception as e:
         print(f"ERROR", e)  
         return []
+def load_file_config()->Dict[str,Any]:
+    try:
+        if file_config_path.exists():
+            with open(file_config_path, "r", encoding="utf-8") as f:
+                return yaml.safe_load(f)
+        else:
+            raise FileNotFoundError(f"{file_config_path} does not exist yet!!")
+    except Exception as e:
+        print("Error", e)
+        return {}       
+        
      
 if __name__=="__main__" :
     config=config_loader()
@@ -37,3 +49,6 @@ if __name__=="__main__" :
     print(f"configuration has been done successful {config['pipeline'] ['name']}")   
     countries=load_countries()
     print(f'loaded countries is {len(countries)}')
+    filed=load_file_config()
+    print(f"{len(filed)}")
+    print(f"{filed.get('general', {})}")
